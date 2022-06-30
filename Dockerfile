@@ -1,10 +1,14 @@
-# stage 1
-FROM node:latest as node
-WORKDIR /app
-COPY . .
-RUN npm install
-RUN npm run build --prod
+FROM node:10
 
-# stage 2
-FROM nginx:alpine
-COPY --from=node /app/dist/stage-ya /usr/share/nginx/html
+WORKDIR /usr/src/app
+
+# Install app dependencies
+COPY package*.json ./
+
+RUN npm install
+
+# Bundle app source
+COPY . .
+
+EXPOSE 8080
+CMD [ "node", "server.js" ]
